@@ -28,6 +28,7 @@ max_comp_reported_sp = 20          # max number of compounds reported at species
 max_comp_reported_g = 100          # max number of compounds reported at genus level,more than this value, the plant is considered less interesting
 max_comp_reported_f = 500           # max number of compounds reported at genus level,more than this value, the plant is considered less interesting
 
+calculate_LC = True
 
 ########################################################
 ### PART 3: Compute the Literature report            ###
@@ -79,9 +80,14 @@ def literature_component(df, max_comp_reported_sp, max_comp_reported_g, max_comp
                 LotusDBf,
                 how= 'left', left_on=family_column, right_on='organism_taxonomy_06family').drop_duplicates(subset=[id_column])
     df.drop('organism_taxonomy_06family', axis=1, inplace=True)
-
     df = df.fillna(0) #assumign species not present in LotusDB the number of reported compounds is set to 0
-    df['LC'] = 1-df['Reported_comp_Species'].div(max_comp_reported_sp*100)-df['Reported_comp_Genus'].div(max_comp_reported_g*100)-df['Reported_comp_Family'].div(max_comp_reported_f*100)
+
+    if calculate_LC == True: 
+        df['LC'] = 1-df['Reported_comp_Species'].div(max_comp_reported_sp*100)-df['Reported_comp_Genus'].div(max_comp_reported_g*100)-df['Reported_comp_Family'].div(max_comp_reported_f*100)
+        df.to_csv('../LC_results.tsv', sep='\t')
+    else:
+        print('Literature component not calculated')
+    
     df.to_csv('../LC_results.tsv', sep='\t')
     return df
         
