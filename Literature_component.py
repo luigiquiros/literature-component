@@ -1,10 +1,5 @@
 import pandas as pd
 import numpy as np
-import pathlib
-sys.path.append('../src')
-from import_data import*
-from process_data import *
-
 
 ########################################################
 ### PART 1: LOAD Metadata                            ###
